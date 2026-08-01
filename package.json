@@ -1,0 +1,33 @@
+{
+	"name": "codehelper",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Personal coding agent powered by the pi agent harness",
+	"type": "module",
+	"bin": {
+		"codehelper": "bin/codehelper.mjs"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"scripts": {
+		"setup": "node scripts/setup.mjs",
+		"validate": "node scripts/validate.mjs",
+		"pi": "pi",
+		"ch": "node bin/codehelper.mjs",
+		"ch:plan": "node bin/codehelper.mjs plan",
+		"ch:implement": "node bin/codehelper.mjs implement",
+		"ch:review": "node bin/codehelper.mjs review",
+		"ch:commit": "node bin/codehelper.mjs commit",
+		"ch:test": "node bin/codehelper.mjs test",
+		"ch:fix": "node bin/codehelper.mjs fix",
+		"ch:pr": "node bin/codehelper.mjs pr",
+		"ch:docs": "node bin/codehelper.mjs docs",
+		"ch:wrap": "node bin/codehelper.mjs wrap"
+	},
+	"devDependencies": {
+		"@earendil-works/pi-ai": "^0.82.1",
+		"@earendil-works/pi-coding-agent": "^0.82.1",
+		"typebox": "1.1.38"
+	}
+}
