@@ -5,9 +5,10 @@
 ## 特性
 
 - 计划驱动的开发流程：`/plan` → `/implement` → `/test` → `/commit`
-- 常用 slash 命令：代码审查、Bug 修复、PR、文档更新、端到端收尾
+- 常用 slash 命令：代码审查、深度调试、行为不变重构、Bug 修复、PR、文档更新、端到端收尾
 - 按需加载的 skills（[Agent Skills 标准](https://agentskills.io/specification)）
-- 安全扩展：危险命令拦截、git checkpoint、todo 管理
+- 安全扩展：危险命令拦截、受保护路径守卫（.env / 密钥 / node_modules）、提交前密钥扫描、git checkpoint、todo 管理
+- 项目状态感知：每轮对话自动注入分支与工作区状态，提供 `repo-status` 工具按需查询
 - 轻量 CLI：`codehelper plan "..."`、`codehelper review` 等非交互自动化入口
 
 ## 快速开始
@@ -31,6 +32,8 @@ npx pi
 - 在 pi 内执行 `/login`，选择订阅登录或 API key 登录
 - 或设置环境变量，例如 `export ANTHROPIC_API_KEY=sk-ant-...`
 
+本项目默认使用 DeepSeek（`deepseek-v4-flash`），API key 已存于 pi 全局凭据目录 `~/.pi/agent/auth.json`（不在仓库内）。如需切换模型或提供商，修改 `.pi/settings.json` 中的 `defaultProvider` / `defaultModel`（可用 `deepseek-v4-pro` 处理复杂任务）。
+
 ## CLI 用法
 
 `node bin/codehelper.mjs` 或 `npm run ch -- <cmd>`，子命令如下：
@@ -44,6 +47,8 @@ npx pi
 | `commit [message]` | 非交互：规范化提交 |
 | `test [命令]` | 非交互：运行测试并修复失败 |
 | `fix "<问题>"` | 非交互：定位并修复 bug |
+| `debug "<问题>"` | 非交互：深度调试（复现 → 根因 → 修复 → 回归） |
+| `refactor "<范围>"` | 非交互：行为不变重构（基线 → 方案 → 实施 → 回归） |
 | `pr [title]` | 非交互：创建/更新 PR |
 | `docs [主题]` | 非交互：更新文档 |
 | `wrap "<说明>"` | 非交互：端到端完成当前任务 |

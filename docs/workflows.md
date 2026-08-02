@@ -73,6 +73,30 @@ codehelper docs "更新 README 的使用说明"
 
 只更新与当前改动相关的文档，保证命令、路径、示例可真实运行。
 
+## 8. 深度调试（Iteration 1）
+
+适合"问题存在但原因不明"的场景，避免猜测式修改。
+
+```bash
+codehelper debug "列表页在移动端点击无响应"
+```
+
+流程：复现 → 最小化 → 定位根因 → 最小修复 → 补回归测试。要求一次只验证一个假设，修复前必须能说清根因；完成后按「复现条件 / 根因 / 修复方式 / 验证结果 / 遗留事项」报告。
+
+对应技能：[debug](../.pi/skills/debug/SKILL.md)
+
+## 9. 行为不变重构（Iteration 2）
+
+适合"想整理代码但怕改坏"的场景。
+
+```bash
+codehelper refactor "提取 src/utils.js 中重复的价格计算逻辑"
+```
+
+流程：理解现状 → 建立测试基线 → 输出方案（默认停在方案阶段等确认，指令里加"直接做"才继续）→ 小步实施 → 回归验证。要求行为不变、不改对外接口、不顺手加功能；实施前用 git 记录状态。
+
+对应技能：[refactor](../.pi/skills/refactor/SKILL.md)
+
 ## 添加新工作流
 
 1. 在 `.pi/prompts/` 新建 `<name>.md`，frontmatter 写 `description` 与 `argument-hint`

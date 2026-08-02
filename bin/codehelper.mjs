@@ -26,6 +26,8 @@ const PROMPT_COMMANDS = new Map([
 	["commit", "commit"],
 	["test", "test"],
 	["fix", "fix"],
+	["debug", "debug"],
+	["refactor", "refactor"],
 	["pr", "pr"],
 	["docs", "docs"],
 	["wrap", "wrap"],
@@ -47,6 +49,8 @@ const USAGE = `CodeHelper CLI
   commit "[message]" 规范化提交（Conventional Commits）
   test "[命令]"      运行测试并修复失败
   fix "<问题>"       定位并修复 bug
+  debug "<问题>"     深度调试：复现、定位根因、修复、回归
+  refactor "<范围>"  行为不变的重构：基线、方案、小步实施、回归
   pr "[title]"       创建/更新 Pull Request
   docs "[主题]"      更新项目文档
   wrap "<说明>"      端到端完成当前任务（实现、验证、提交）

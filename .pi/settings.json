@@ -1,4 +1,6 @@
 {
+	"defaultProvider": "deepseek",
+	"defaultModel": "deepseek-v4-flash",
 	"enableSkillCommands": true,
 	"defaultThinkingLevel": "high",
 	"theme": "dark",
