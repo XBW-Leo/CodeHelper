@@ -17,6 +17,12 @@
 - `npm run validate`（`node scripts/validate.mjs`）：校验 .pi 下的 settings、prompts、skills、extensions。
 - 修改 prompts / skills / extensions / settings 后，必须运行 `npm run validate` 并保持全绿。
 
+## 跨会话记忆
+
+- 项目的重要决策、踩坑经验、用户偏好，用 `memory` 工具记录到 `.codehelper/notes.md`。
+- 新会话会自动加载笔记摘要；查看全部用 `memory list`，检索用 `memory search <关键词>`。
+- 记录要求：一句话一条、具体可检索，不记流水账。
+
 ## 修改 .pi 资源的规则
 
 - **新增 prompt**：在 `.pi/prompts/<name>.md` 创建，frontmatter 必须含 `description`，可选 `argument-hint`；文件名即 slash 命令名（`/name`）。
@@ -37,4 +43,3 @@
 
 - 功能变更后同步更新 `docs/` 与 `README.md`。
 - 完成某个开发阶段后，更新 `PLAN.md` 中的状态标记。
-

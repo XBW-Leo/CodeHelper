@@ -10,3 +10,5 @@ argument-hint: "[title]"
 3. 若远端没有对应分支，先推送：`git push -u origin <branch>`。
 4. 用 `gh pr create` 创建 PR；若 PR 已存在，用 `gh pr edit` 更新标题与描述。
 5. 报告 PR 链接。
+
+推荐模型档位：light（flash 级）。

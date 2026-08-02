@@ -9,6 +9,10 @@
 - 按需加载的 skills（[Agent Skills 标准](https://agentskills.io/specification)）
 - 安全扩展：危险命令拦截、受保护路径守卫（.env / 密钥 / node_modules）、提交前密钥扫描、git checkpoint、todo 管理
 - 项目状态感知：每轮对话自动注入分支与工作区状态，提供 `repo-status` 工具按需查询
+- 跨会话记忆：项目决策与踩坑记录自动持久化（`.codehelper/notes.md`），新会话自动加载
+- 会话后总结：每轮有实际改动的任务结束，自动沉淀「目标 / 改动 / 结果」到记忆
+- 成本统计：按会话累计 token 与费用（`/cost` 命令、`cost-stats` 工具、`.codehelper/costs.jsonl` 历史）
+- 多模型路由：按任务类型自动选择 heavy/light 档模型（配置驱动、供应商无关）
 - 轻量 CLI：`codehelper plan "..."`、`codehelper review` 等非交互自动化入口
 
 ## 快速开始
@@ -34,6 +38,20 @@ npx pi
 
 本项目默认使用 DeepSeek（`deepseek-v4-flash`），API key 已存于 pi 全局凭据目录 `~/.pi/agent/auth.json`（不在仓库内）。如需切换模型或提供商，修改 `.pi/settings.json` 中的 `defaultProvider` / `defaultModel`（可用 `deepseek-v4-pro` 处理复杂任务）。
 
+### 切换模型供应商
+
+多模型路由由 [.codehelper/model-routing.json](.codehelper/model-routing.json) 驱动，与具体供应商解耦：
+
+1. 修改 `heavy` / `light` 为其他供应商的模型（`provider/model` 格式），例如 `anthropic/claude-...`、`openai/gpt-...`、`google/gemini-...`（具体模型 ID 可在 pi 内用 `/model` 查看）
+2. 配置对应 API key（环境变量或 pi 内 `/login`）
+3. 非交互命令会自动按档位附加 `--model`；交互模式用 Ctrl+P 在 `enabledModels` 之间循环切换
+
+### `.codehelper/` 目录策略
+
+- `model-routing.json`：模型路由配置，入库管理
+- `notes.md`：跨会话记忆，入库管理（可随版本追踪决策与踩坑记录）
+- `costs.jsonl`：运行时成本流水，已加入 `.gitignore`，不入库
+
 ## CLI 用法
 
 `node bin/codehelper.mjs` 或 `npm run ch -- <cmd>`，子命令如下：
@@ -49,6 +67,9 @@ npx pi
 | `fix "<问题>"` | 非交互：定位并修复 bug |
 | `debug "<问题>"` | 非交互：深度调试（复现 → 根因 → 修复 → 回归） |
 | `refactor "<范围>"` | 非交互：行为不变重构（基线 → 方案 → 实施 → 回归） |
+| `issue "<编号/URL>"` | 非交互：分析 GitHub issue 并输出实施计划 |
+| `ci-fix "<PR>"` | 非交互：分析 CI/PR 检查失败，定位根因并给修复建议 |
+| `test-gen "<目标>"` | 非交互：为函数/模块生成单元测试骨架并验证 |
 | `pr [title]` | 非交互：创建/更新 PR |
 | `docs [主题]` | 非交互：更新文档 |
 | `wrap "<说明>"` | 非交互：端到端完成当前任务 |

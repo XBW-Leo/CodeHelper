@@ -66,6 +66,23 @@ if (existsSafe(settingsPath)) {
 	check(false, "存在 .pi/settings.json");
 }
 
+// 2.1 .codehelper/model-routing.json
+const routingPath = join(ROOT, ".codehelper", "model-routing.json");
+if (existsSafe(routingPath)) {
+	try {
+		const routing = JSON.parse(readFileSync(routingPath, "utf8"));
+		check(typeof routing.heavy === "string" && routing.heavy, "model-routing.json: heavy 为合法模型字符串");
+		check(typeof routing.light === "string" && routing.light, "model-routing.json: light 为合法模型字符串");
+		const tiers = ["heavy", "light"];
+		const bad = Object.entries(routing.commands ?? {}).filter(([, v]) => !tiers.includes(v));
+		check(bad.length === 0, `model-routing.json: commands 档位合法（非法: ${bad.map(([k]) => k).join(", ") || "无"}）`);
+	} catch (err) {
+		check(false, `.codehelper/model-routing.json 解析失败: ${err.message}`);
+	}
+} else {
+	check(false, "存在 .codehelper/model-routing.json");
+}
+
 // 3. prompts
 const promptFiles = list(join(ROOT, ".pi", "prompts"), (name) => name.endsWith(".md"));
 infos.push(`  发现 ${promptFiles.length} 个 prompt 模板`);

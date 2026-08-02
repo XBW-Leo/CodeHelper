@@ -1,0 +1,20 @@
+{
+	"heavy": "deepseek/deepseek-v4-pro",
+	"light": "deepseek/deepseek-v4-flash",
+	"commands": {
+		"plan": "heavy",
+		"implement": "heavy",
+		"debug": "heavy",
+		"refactor": "heavy",
+		"issue": "heavy",
+		"ci-fix": "heavy",
+		"test-gen": "heavy",
+		"fix": "heavy",
+		"wrap": "heavy",
+		"review": "light",
+		"commit": "light",
+		"test": "light",
+		"docs": "light",
+		"pr": "light"
+	}
+}
