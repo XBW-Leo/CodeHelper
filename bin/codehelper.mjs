@@ -44,6 +44,7 @@ const USAGE = `CodeHelper CLI
   codehelper <命令> [参数...]        非交互执行对应工作流
   codehelper setup                  环境安装与体检
   codehelper check                  配置校验
+  codehelper auto-check            运行自动检查（校验/测试/依赖）并生成报告
   codehelper --help                 显示本帮助
 
 命令:
@@ -126,6 +127,9 @@ switch (command) {
 	case "check":
 	case "validate":
 		runNodeScript("validate.mjs");
+		break;
+	case "auto-check":
+		runNodeScript("auto-check.mjs", rest);
 		break;
 	case "interactive":
 		runInteractive();

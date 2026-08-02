@@ -13,6 +13,7 @@
 - 会话后总结：每轮有实际改动的任务结束，自动沉淀「目标 / 改动 / 结果」到记忆
 - 成本统计：按会话累计 token 与费用（`/cost` 命令、`cost-stats` 工具、`.codehelper/costs.jsonl` 历史）
 - 多模型路由：按任务类型自动选择 heavy/light 档模型（配置驱动、供应商无关）
+- 定时监控：`auto-check` 一键跑校验/测试/依赖检查，生成报告，可接入 cron / launchd
 - 轻量 CLI：`codehelper plan "..."`、`codehelper review` 等非交互自动化入口
 
 ## 快速开始
@@ -51,6 +52,41 @@ npx pi
 - `model-routing.json`：模型路由配置，入库管理
 - `notes.md`：跨会话记忆，入库管理（可随版本追踪决策与踩坑记录）
 - `costs.jsonl`：运行时成本流水，已加入 `.gitignore`，不入库
+- `reports/`：自动检查报告，已加入 `.gitignore`，不入库
+
+### 定时自动检查
+
+```bash
+npm run ch -- auto-check        # 手动跑一次，报告生成到 .codehelper/reports/YYYY-MM-DD.md
+```
+
+接入系统调度（失败时退出码为 1，可用于告警）：
+
+**macOS（launchd）**：新建 `~/Library/LaunchAgents/com.codehelper.auto-check.plist`：
+
+```xml
+<plist version="1.0">
+  <dict>
+    <key>Label</key><string>com.codehelper.auto-check</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/usr/bin/env</string>
+      <string>node</string>
+      <string>/Users/wuxuebin/CodeHelper/scripts/auto-check.mjs</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict><key>Hour</key><integer>9</integer><key>Minute</key><integer>0</integer></dict>
+  </dict>
+</plist>
+```
+
+然后 `launchctl load ~/Library/LaunchAgents/com.codehelper.auto-check.plist`。
+
+**Linux（cron）**：
+
+```bash
+0 9 * * * cd /Users/wuxuebin/CodeHelper && /usr/bin/env node scripts/auto-check.mjs
+```
 
 ## CLI 用法
 
@@ -70,6 +106,7 @@ npx pi
 | `issue "<编号/URL>"` | 非交互：分析 GitHub issue 并输出实施计划 |
 | `ci-fix "<PR>"` | 非交互：分析 CI/PR 检查失败，定位根因并给修复建议 |
 | `test-gen "<目标>"` | 非交互：为函数/模块生成单元测试骨架并验证 |
+| `auto-check` | 运行自动检查（配置/测试/依赖）并生成报告 |
 | `pr [title]` | 非交互：创建/更新 PR |
 | `docs [主题]` | 非交互：更新文档 |
 | `wrap "<说明>"` | 非交互：端到端完成当前任务 |

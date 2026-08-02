@@ -26,6 +26,7 @@
 		"ch:issue": "node bin/codehelper.mjs issue",
 		"ch:ci-fix": "node bin/codehelper.mjs ci-fix",
 		"ch:test-gen": "node bin/codehelper.mjs test-gen",
+		"ch:auto-check": "node bin/codehelper.mjs auto-check",
 		"ch:pr": "node bin/codehelper.mjs pr",
 		"ch:docs": "node bin/codehelper.mjs docs",
 		"ch:wrap": "node bin/codehelper.mjs wrap"

@@ -7,3 +7,4 @@ __pycache__/
 dist/
 .pi/npm/
 .codehelper/costs.jsonl
+.codehelper/reports/

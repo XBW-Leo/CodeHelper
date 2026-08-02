@@ -48,10 +48,18 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 | Phase 3 | 自动化命令与技能 | ✅ 完成 |
 | Phase 4 | 扩展增强 | ✅ 完成 |
 | Phase 5 | 工作流验证与打磨 | ⏳ 进行中 |
-| Phase 6 | 核心功能迭代（P0） | 待开始 |
-| Phase 7 | 进阶功能迭代（P1） | 待开始 |
-| Phase 8 | 锦上添花（P2） | 待开始 |
+| Phase 6 | 核心功能迭代（P0，Iteration 1–5） | ✅ 完成 |
+| Phase 7 | 进阶功能迭代（P1，Iteration 6–12） | ✅ 完成 |
+| Phase 8 | 锦上添花（P2，Iteration 13–18） | ⏳ 进行中（1/6） |
 | Phase 9 | 发布与沉淀 | 待开始 |
+
+## 当前成果
+
+- 资源规模：14 个 prompts、8 个 skills、9 个扩展、17+ CLI 子命令
+- 引擎：pi 0.82.1（项目内 devDependencies）；provider：DeepSeek（默认 `deepseek-v4-flash`，`deepseek-v4-pro` 备用）
+- 代码仓库：已推送至 GitHub（XBW-Leo/CodeHelper），3 次提交：`7d99992` 框架、`afb4356` P0、`4e5df11` P1（Iteration 14 待提交）
+- 校验：`npm run validate` 全绿（settings / prompts / skills / extensions / model-routing）
+- 每项功能均做过真实动态验收（真实 bug、真实 issue、真实失败 PR）
 
 ## 阶段详情
 
@@ -87,32 +95,36 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 
 状态：✅ 已完成（v1）
 
-- [x] prompts：`/plan` `/implement` `/review` `/commit` `/test` `/fix` `/pr` `/docs` `/wrap`
-- [x] skills：`plan-driven-dev`、`git-workflow`、`code-review`
+- [x] prompts（14）：`/plan` `/implement` `/review` `/commit` `/test` `/fix` `/debug` `/refactor` `/issue` `/ci-fix` `/test-gen` `/pr` `/docs` `/wrap`
+- [x] skills（8）：`plan-driven-dev`、`git-workflow`、`code-review`、`debug`、`refactor`、`issue-analysis`、`ci-failure-analysis`、`test-generation`
 - [x] `npm run validate` 覆盖 prompts / skills 格式校验
 
 ### Phase 4 — 扩展增强
 
 状态：✅ 已完成（v1）
 
-- [x] `extensions/git-checkpoint.ts`：每轮 turn 创建 git stash checkpoint，fork 时可恢复代码状态
-- [x] `extensions/safety-guard.ts`：拦截危险 bash 命令（rm -rf、git reset --hard、force push 等）
-- [x] `extensions/todo.ts`：`todo` 工具 + `/todos` 命令
+- [x] 基础（3）：`git-checkpoint`（每轮快照）、`safety-guard`（危险命令拦截）、`todo`（待办工具）
+- [x] 安全（2）：`path-guard`（路径保护）、`secret-scan`（提交前密钥扫描）
+- [x] 感知（1）：`repo-status`（状态注入 + 查询工具）
+- [x] 记忆（2）：`memory`（跨会话记忆）、`post-session-summary`（会话后总结）
+- [x] 成本（1）：`cost-tracker`（token/费用统计）
 
 ### Phase 5 — 工作流验证与打磨
 
 状态：⏳ 进行中
 
 - [x] 5.1 `npm run validate` 全绿
-- [ ] 5.2 交互模式首次运行：`npm run pi` → 信任项目（provider 已配置：DeepSeek / deepseek-v4-flash，密钥存于 `~/.pi/agent/auth.json`，剩余信任与首次体验待你操作）
+- [ ] 5.2 交互模式首次运行：`npm run pi` → 信任项目（provider 与密钥已配置完成，剩余首次体验待你操作）
 - [ ] 5.3 端到端演练：plan → implement → test → commit → pr
-- [ ] 5.4 非交互子命令逐一验证
+- [ ] 5.4 非交互子命令逐一验证（大多数已随各迭代真实验收，待补完整清单核对）
 
-> 说明：5.2 需要你配置模型提供商才能继续；如果想先推进纯代码类功能，也可以先做 Phase 6，之后再回来补验证。
+> 说明：非交互命令已在实际迭代中反复验证；剩余未验证的主要是交互模式体验与一条完整端到端链路。
 
 ### Phase 6 — 核心功能迭代（P0）
 
 优先级逻辑：先把「干活（调试/重构）」和「安全」做好，再补「效率感知」。
+
+状态：✅ 全部完成（5/5）
 
 #### Iteration 1 — /debug 深度调试技能
 
@@ -161,6 +173,8 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 ### Phase 7 — 进阶功能迭代（P1）
 
 优先级逻辑：先解决「记忆与成本」这类长期体验，再做「GitHub 集成」和「测试生成」。
+
+状态：✅ 全部完成（7/7）
 
 #### Iteration 6 — 跨会话记忆
 
@@ -216,8 +230,10 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 
 优先级逻辑：集成与体验类增强，等 P0/P1 稳定后再按需挑选。
 
+状态：⏳ 进行中（1/6）
+
 - [ ] Iteration 13 — **编辑器集成**：通过 pi 的 RPC/SDK 接入 VS Code 或 Neovim
-- [ ] Iteration 14 — **定时监控**：定时跑测试/依赖检查并生成报告
+- [x] Iteration 14 — **定时监控**：`auto-check` 一键跑校验/测试/依赖检查并生成报告（可接入 cron / launchd）—— ✅ 已完成（2026-08-02 验收通过）
 - [ ] Iteration 15 — **联网查证**：web search / 官方文档查证 skill
 - [ ] Iteration 16 — **容器化 / 沙箱**：参考 pi containerization.md 在受限环境运行
 - [ ] Iteration 17 — **会话分享与知识沉淀**：优质会话导出 HTML/笔记，形成个人知识库
@@ -228,6 +244,14 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 - [ ] CHANGELOG 与版本化（0.1.0 → 0.2.0 …）
 - [ ] 把稳定技能沉淀为可安装的 pi package（可选）
 - [ ] 汇总使用手册与 FAQ
+- [ ] 引擎升级 pi 0.82.1 → 0.83.0（升级后需回归全部扩展）
+
+## 后续优化项（Review 遗留）
+
+- [ ] 扩展 TS 类型校验：`tsc --noEmit` 加入 `npm run validate`（需引入 typescript 依赖）
+- [ ] prompt 档位标注移入 frontmatter（如 `model-tier: heavy`），减少系统提示噪音
+- [ ] notes 追加逻辑抽取公共模块，统一 memory 与 post-session-summary 的日期处理
+- [ ] 统一 settings `enabledModels` 与 model-routing 的模型 ID 书写格式（provider 前缀）
 
 ## 完成标准（Definition of Done）
 
