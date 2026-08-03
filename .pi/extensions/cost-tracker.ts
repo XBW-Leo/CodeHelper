@@ -6,7 +6,7 @@
  * 提供 `/cost` 命令与 `cost-stats` 工具实时查询。
  */
 
-import { appendFileSync, mkdirSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
@@ -75,6 +75,49 @@ function appendCostRecord(cwd: string, sessionId: string, totals: CostTotals): v
 	appendFileSync(file, `${JSON.stringify(record)}\n`, "utf8");
 }
 
+/**
+ * 汇总某 session 已写入 costs.jsonl 的增量，作为上次写入的累计基线。
+ * 进程重启后基线仍正确（增量求和 = 累计值），避免重复计数。
+ */
+function sumCostRecords(cwd: string, sessionId: string): CostTotals {
+	const totals = emptyTotals();
+	const file = costsFile(cwd);
+	if (!existsSync(file)) return totals;
+	for (const line of readFileSync(file, "utf8").split("\n")) {
+		const record = line.trim() ? parseCostRecord(line) : null;
+		if (!record || record.sessionId !== sessionId) continue;
+		totals.input += record.input;
+		totals.output += record.output;
+		totals.cacheRead += record.cacheRead;
+		totals.cacheWrite += record.cacheWrite;
+		totals.totalTokens += record.totalTokens;
+		totals.cost += record.cost;
+	}
+	return totals;
+}
+
+interface CostRecord extends CostTotals {
+	sessionId: string;
+}
+
+function parseCostRecord(line: string): CostRecord | null {
+	try {
+		const rec = JSON.parse(line) as Partial<CostRecord>;
+		if (typeof rec !== "object" || rec === null) return null;
+		return {
+			sessionId: typeof rec.sessionId === "string" ? rec.sessionId : "",
+			input: rec.input ?? 0,
+			output: rec.output ?? 0,
+			cacheRead: rec.cacheRead ?? 0,
+			cacheWrite: rec.cacheWrite ?? 0,
+			totalTokens: rec.totalTokens ?? 0,
+			cost: rec.cost ?? 0,
+		};
+	} catch {
+		return null;
+	}
+}
+
 function formatTotals(totals: CostTotals): string {
 	return [
 		`输入 tokens: ${totals.input}`,
@@ -98,13 +141,10 @@ export default function (pi: ExtensionAPI) {
 		return totals;
 	};
 
-	// 每个 session 上次写入的累计值，用于计算增量
-	const lastWritten = new Map<string, CostTotals>();
-
 	pi.on("agent_end", async (_event, ctx) => {
 		const sessionId = ctx.sessionManager.getSessionId();
 		const current = computeSessionTotals(ctx);
-		const previous = lastWritten.get(sessionId) ?? emptyTotals();
+		const previous = sumCostRecords(ctx.cwd, sessionId);
 		const delta: CostTotals = {
 			input: current.input - previous.input,
 			output: current.output - previous.output,
@@ -114,7 +154,6 @@ export default function (pi: ExtensionAPI) {
 			cost: current.cost - previous.cost,
 		};
 		appendCostRecord(ctx.cwd, sessionId, delta);
-		lastWritten.set(sessionId, current);
 	});
 
 	pi.registerCommand("cost", {
