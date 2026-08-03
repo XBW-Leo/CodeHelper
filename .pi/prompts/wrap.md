@@ -1,6 +1,7 @@
 ---
 description: 端到端完成当前任务：实现、验证、规范化提交
 argument-hint: "[说明]"
+model-tier: heavy
 ---
 请把当前任务端到端完成。附加说明：$ARGUMENTS
 
@@ -10,5 +11,3 @@ argument-hint: "[说明]"
 3. 按 /commit 的规则规范化提交：只提交本次会话相关文件，Conventional Commits 格式。
 4. 若任务关联 GitHub issue/PR，在提交信息中加入 `closes #N`，并按需处理 issue 状态。
 5. 最终报告：改动清单、验证结果、提交 hash、遗留事项。
-
-推荐模型档位：heavy（pro 级推理）。

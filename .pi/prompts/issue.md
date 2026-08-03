@@ -1,6 +1,7 @@
 ---
 description: 分析 GitHub issue 并输出分阶段实施计划
 argument-hint: "<issue 编号或 URL>"
+model-tier: heavy
 ---
 请分析以下 GitHub issue：$ARGUMENTS
 
@@ -11,5 +12,3 @@ argument-hint: "<issue 编号或 URL>"
 3. 结合仓库现状分析影响面（只使用只读命令）。
 4. 输出：问题本质、影响面、分阶段实施计划（目标 / 步骤 / 涉及文件 / 验收标准）。
 5. 停在计划阶段，不实施；等我确认后再用 /implement。
-
-推荐模型档位：heavy（pro 级推理）。

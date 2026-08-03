@@ -1,6 +1,7 @@
 ---
 description: 分析 CI/PR 检查失败：列检查、拉日志、定位根因、给修复建议
 argument-hint: "<PR 编号或 URL>"
+model-tier: heavy
 ---
 请分析以下 PR 的 CI 检查状态：$ARGUMENTS
 
@@ -13,5 +14,3 @@ argument-hint: "<PR 编号或 URL>"
 5. 输出：失败项、根因、涉及文件、修复建议；停在建议阶段，等我确认后再实施。
 
 规则：只读分析，不修改 PR、不 push、不 checkout 他人分支。
-
-推荐模型档位：heavy（pro 级推理）。

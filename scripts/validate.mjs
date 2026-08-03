@@ -118,6 +118,13 @@ for (const file of promptFiles) {
 	const desc = frontmatter?.description || body.split("\n").find((line) => line.trim());
 	check(Boolean(desc), `prompt /${name} 有描述`);
 	check(!frontmatter?.description || frontmatter.description.length <= 1024, `prompt /${name} 描述长度合法`);
+	const tier = frontmatter?.["model-tier"];
+	check(tier === "heavy" || tier === "light", `prompt /${name}: model-tier 为 heavy/light（当前: ${tier ?? "无"}）`);
+	const expectedTier = routing?.commands?.[name] ?? "light";
+	check(
+		!tier || tier === expectedTier,
+		`prompt /${name}: model-tier 与 model-routing 一致（期望 ${expectedTier}）`,
+	);
 }
 
 // 4. skills

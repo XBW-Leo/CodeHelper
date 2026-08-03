@@ -1,6 +1,7 @@
 ---
 description: 深度调试：复现 → 最小化 → 定位根因 → 修复 → 回归
 argument-hint: "<问题描述>"
+model-tier: heavy
 ---
 请按深度调试流程修复以下问题：$ARGUMENTS
 
@@ -19,5 +20,3 @@ argument-hint: "<问题描述>"
 - 修复方式（涉及的文件）
 - 验证结果
 - 遗留事项
-
-推荐模型档位：heavy（pro 级推理）。
