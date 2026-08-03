@@ -6,6 +6,7 @@
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -123,6 +124,20 @@ for (const file of extFiles) {
 	check(text.includes("export default"), `${file.split("/").pop()}: 导出默认工厂函数`);
 	check(/pi\.on\(|pi\.registerTool\(|pi\.registerCommand\(/.test(text), `${file.split("/").pop()}: 调用 ExtensionAPI 方法`);
 }
+
+// 6. TypeScript 类型校验
+const tscBin = join(ROOT, "node_modules", "typescript", "lib", "tsc.js");
+let tscOutput = "";
+if (existsSafe(tscBin)) {
+	infos.push("  运行 tsc --noEmit 类型校验");
+	const tscResult = spawnSync(process.execPath, [tscBin, "--noEmit"], { cwd: ROOT, encoding: "utf8" });
+	tscOutput = `${tscResult.stdout || ""}${tscResult.stderr || ""}`.trim();
+	check(tscResult.status === 0, "tsc --noEmit 通过");
+} else {
+	check(false, "未找到 typescript（请先运行 npm install）");
+}
+
+if (tscOutput) process.stdout.write(`\n${tscOutput}\n`);
 
 process.stdout.write("\nCodeHelper 配置校验\n");
 process.stdout.write(infos.map((line) => ` ${line}`).join("\n") + "\n");
