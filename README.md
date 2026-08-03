@@ -147,7 +147,7 @@ npx pi
 | `ci-fix "<PR>"` | 分析 CI/PR 检查失败：拉日志、定位根因、给修复建议 |
 | `test-gen "<目标>"` | 为函数/模块生成单元测试骨架并运行验证 |
 | `auto-check` | 运行配置校验/测试/依赖检查，生成报告 |
-| `pr [title]` | 创建/更新 Pull Request |
+| `pr "[title]" [--draft]` | 创建/更新 Pull Request（加 `--draft` 创建草稿） |
 | `docs [主题]` | 更新项目文档 |
 | `wrap "<说明>"` | 端到端完成当前任务：实现、验证、规范化提交 |
 | `setup` | 环境安装与体检 |

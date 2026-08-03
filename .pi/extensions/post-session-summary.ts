@@ -37,17 +37,22 @@ function findGoal(messages: SummaryMessage[]): string {
 		if (text.startsWith("[repo-status]") || text.startsWith("[memory]")) continue;
 		goal = text;
 	}
-	return goal.slice(0, 120);
+	return singleLine(goal, 120);
 }
 
 /** 提取结果：最后一条 assistant 消息文本 */
 function findResult(messages: SummaryMessage[]): string {
 	for (let i = messages.length - 1; i >= 0; i--) {
 		if (messages[i].role === "assistant") {
-			return textContent(messages[i].content).slice(0, 200);
+			return singleLine(textContent(messages[i].content), 200);
 		}
 	}
 	return "";
+}
+
+/** 压缩为单行：notes 记录要求"一句话一条"，避免多行 markdown 破坏格式 */
+function singleLine(text: string, max: number): string {
+	return text.replace(/\s+/g, " ").trim().slice(0, max);
 }
 
 export default function (pi: ExtensionAPI) {

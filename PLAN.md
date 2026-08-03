@@ -253,6 +253,11 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 - [x] notes 追加逻辑抽取公共模块（`.pi/extensions/lib/notes.ts`），统一 memory 与 post-session-summary 的日期处理（Asia/Shanghai）—— ✅ 已完成（2026-08-03）
 - [x] 统一 settings `enabledModels` 与 model-routing 的模型 ID 书写格式（provider 前缀）—— ✅ 已完成（2026-08-03）
 
+## 遗留事项（待办评估）
+
+- [ ] **typescript 5.9.3 → 7.x 升级评估**：TS 7 为原生（Go）重写，跨 major 对 tsc/tsconfig 行为有差异风险；auto-check 会持续报 outdated（警告级，不影响流程）。决定：**暂缓**，待 Phase 8 收尾后、Phase 9 发布前单独评估（2026-08-03 端到端演练中发现并记录）。
+- [ ] **/pr 交互体验**：已支持 `--draft` 参数（2026-08-03 修复），后续可考虑交互模式选择是否 Draft。
+
 ## 完成标准（Definition of Done）
 
 1. `npm run validate` 全绿
