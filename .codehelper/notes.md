@@ -28,3 +28,16 @@
 ### 覆盖的导出 & 用例
 
 | 导出函数 | 正常路径 | 边界条件 | 错误路径 | 合
+
+## 2026-08-03
+- [总结 16:08] 目标：请按当前对话中已确认的计划实施。附加说明：按已确认计划实施：为 codehelper CLI 增加 --version/-V/version 参数（读取 package.json version），README 表格中 --version ；改动：/Users/wuxuebin/项目/CodeHelper/bin/codehelper.mjs, /Users/wuxuebin/项目/CodeHelper/README.md；结果：全部通过 ✅
+
+---
+
+## 完成报告
+
+### 改了什么
+
+| 文件 | 改动 |
+|------|------|
+| `bin/codehelper.mjs` | 新增 `showVersion()` 函数读取 `package.json` 的 `version`；在 switch 中添加 `--version`/`-V`/`version` case；在 USAGE 字符串中添加 `--v

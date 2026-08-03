@@ -150,6 +150,8 @@ npx pi
 | `pr [title]` | 创建/更新 Pull Request |
 | `docs [主题]` | 更新项目文档 |
 | `wrap "<说明>"` | 端到端完成当前任务：实现、验证、规范化提交 |
+| `--help` | 显示帮助信息 |
+| `--version` | 显示版本号（也支持 `-V`、`version`） |
 | `setup` | 环境安装与体检 |
 | `check` | 配置校验（等价于 `npm run validate`） |
 

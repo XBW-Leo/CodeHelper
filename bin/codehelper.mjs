@@ -46,6 +46,7 @@ const USAGE = `CodeHelper CLI
   codehelper check                  配置校验
   codehelper auto-check            运行自动检查（校验/测试/依赖）并生成报告
   codehelper --help                 显示本帮助
+  codehelper --version              显示版本号
 
 命令:
   plan "<任务>"      先制定分阶段计划，不写代码
@@ -115,11 +116,21 @@ function runPrompt(command, args) {
 
 const [,, command = "interactive", ...rest] = process.argv;
 
+function showVersion() {
+	const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
+	process.stdout.write(`${pkg.version}\n`);
+}
+
 switch (command) {
 	case "--help":
 	case "-h":
 	case "help":
 		process.stdout.write(USAGE);
+		break;
+	case "--version":
+	case "-V":
+	case "version":
+		showVersion();
 		break;
 	case "setup":
 		runNodeScript("setup.mjs");
