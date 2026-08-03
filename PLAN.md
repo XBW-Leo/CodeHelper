@@ -47,7 +47,7 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 | Phase 2 | 核心配置 | ✅ 完成 |
 | Phase 3 | 自动化命令与技能 | ✅ 完成 |
 | Phase 4 | 扩展增强 | ✅ 完成 |
-| Phase 5 | 工作流验证与打磨 | ⏳ 进行中 |
+| Phase 5 | 工作流验证与打磨 | ✅ 完成 |
 | Phase 6 | 核心功能迭代（P0，Iteration 1–5） | ✅ 完成 |
 | Phase 7 | 进阶功能迭代（P1，Iteration 6–12） | ✅ 完成 |
 | Phase 8 | 锦上添花（P2，Iteration 13–18） | ⏳ 进行中（1/6） |
@@ -111,14 +111,14 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 
 ### Phase 5 — 工作流验证与打磨
 
-状态：⏳ 进行中
+状态：✅ 已完成（2026-08-03）
 
 - [x] 5.1 `npm run validate` 全绿
-- [ ] 5.2 交互模式首次运行：`npm run pi` → 信任项目（provider 与密钥已配置完成，剩余首次体验待你操作）
-- [ ] 5.3 端到端演练：plan → implement → test → commit → pr
-- [ ] 5.4 非交互子命令逐一验证（大多数已随各迭代真实验收，待补完整清单核对）
+- [x] 5.2 交互模式首次运行：`npm run pi` → 信任项目 → `/status` 确认 DeepSeek 登录态与默认模型（2026-08-03 用户实机验收）
+- [x] 5.3 端到端演练：plan → implement → test → commit → pr 全链路真实跑通（2026-08-03，任务：`--version` 参数；产出 commit `a252757` + Draft PR #1）
+- [x] 5.4 非交互子命令逐一验证（本轮演练实测 plan / implement / test / commit / pr；其余子命令已在 P0/P1 各迭代真实验收）
 
-> 说明：非交互命令已在实际迭代中反复验证；剩余未验证的主要是交互模式体验与一条完整端到端链路。
+> 说明：端到端演练中发现两项待办——typescript 5.9.3 → 7.x 为跨 major 升级需单独评估；`/pr` 默认创建非 Draft PR，如需 Draft 需手动转换（`gh pr ready --undo`）。
 
 ### Phase 6 — 核心功能迭代（P0）
 
