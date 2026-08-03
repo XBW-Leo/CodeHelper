@@ -8,7 +8,7 @@
 import { StringEnum } from "@earendil-works/pi-ai";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { MAX_INJECT_CHARS, MAX_LIST_CHARS, appendNote, notesFile, readNotes, summary } from "./lib/notes.ts";
+import { MAX_LIST_CHARS, appendNote, notesFile, readNotes, summary } from "./lib/notes.ts";
 
 function searchNotes(content: string, keyword: string): string {
 	const kw = keyword.toLowerCase();
