@@ -53,9 +53,10 @@ codehelper commit "fix: 修复登录超时问题"
 ```bash
 codehelper pr                        # 自动生成标题与描述
 codehelper pr "feat: 新增用户导出"
+codehelper pr "feat: 新增用户导出" --draft   # 创建草稿 PR
 ```
 
-会先推送远端分支，再用 `gh pr create` 创建（已存在则 `gh pr edit` 更新）。
+会先推送远端分支，再用 `gh pr create` 创建（参数含 `--draft` 时创建草稿 PR；PR 已存在则 `gh pr edit` 更新）。
 
 ## 6. 端到端收尾
 
@@ -96,6 +97,55 @@ codehelper refactor "提取 src/utils.js 中重复的价格计算逻辑"
 流程：理解现状 → 建立测试基线 → 输出方案（默认停在方案阶段等确认，指令里加"直接做"才继续）→ 小步实施 → 回归验证。要求行为不变、不改对外接口、不顺手加功能；实施前用 git 记录状态。
 
 对应技能：[refactor](../.pi/skills/refactor/SKILL.md)
+
+## 10. Issue 分析（Iteration 10）
+
+把 GitHub issue 转成可执行的分阶段计划。
+
+```bash
+codehelper issue "7350"                                # issue 编号
+codehelper issue "https://github.com/owner/repo/issues/7350"  # 或完整 URL
+```
+
+流程：`gh issue view` 读取 issue 全文（含评论与 labels）→ 分类（bug / feature / 提问 / 其他）→ 结合仓库现状做只读影响面分析 → 输出「问题本质 / 影响面 / 分阶段实施计划（目标、步骤、涉及文件、验收标准）」。默认停在计划阶段，确认后再用 `/implement` 实施。
+
+对应技能：[issue-analysis](../.pi/skills/issue-analysis/SKILL.md)
+
+## 11. CI/PR 失败分析（Iteration 11）
+
+PR 检查失败时自动定位根因并给出修复建议。
+
+```bash
+codehelper ci-fix "7350"      # PR 编号或 URL
+```
+
+流程：用 `gh` 定位 PR 与 head commit → 列出全部 check-runs 及结论 → 对失败检查拉取 annotations 与 job 日志 → 本地只读复现确认根因 → 输出「失败项 / 根因 / 涉及文件 / 修复建议」，停在建议阶段。
+
+规则：只读分析，不修改 PR、不 push、不 checkout 他人分支。
+
+对应技能：[ci-failure-analysis](../.pi/skills/ci-failure-analysis/SKILL.md)
+
+## 12. 测试生成（Iteration 12）
+
+为函数/模块生成单元测试骨架并运行验证。
+
+```bash
+codehelper test-gen "src/utils/math.js"
+```
+
+流程：通读目标代码与依赖，确认测试框架与项目风格 → 为每个导出生成正常路径 / 边界条件 / 错误路径用例 → 只创建或修改测试文件，不改业务代码 → 运行验证，未通过用例标 TODO 并说明原因。
+
+对应技能：[test-generation](../.pi/skills/test-generation/SKILL.md)
+
+## 13. 定时自动检查（Iteration 14）
+
+一键运行配置校验、项目测试与依赖检查，生成结构化报告。
+
+```bash
+codehelper auto-check    # 报告生成到 .codehelper/reports/YYYY-MM-DD.md
+```
+
+依次执行：配置校验（`npm run validate`，含 tsc）→ 项目测试（存在 `test` 脚本时）→ 依赖过期检查（警告级）→ 依赖安全审计（警告级）。存在失败时退出码为 1，可接入 cron / launchd 做定时告警（配置示例见 README「定时自动检查」）。
 
 ## 添加新工作流
 
