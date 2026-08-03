@@ -62,6 +62,11 @@ CodeHelper 不 fork 也不修改 pi 源码，而是把 pi 当作"引擎"，用�
 | `/commit` | 规范化提交 |
 | `/test` | 跑测试并修复 |
 | `/fix` | 定位并修复 bug |
+| `/debug` | 深度调试：复现 → 根因 → 修复 → 回归 |
+| `/refactor` | 行为不变重构 |
+| `/issue` | 分析 GitHub issue 并输出实施计划 |
+| `/ci-fix` | 分析 CI/PR 检查失败 |
+| `/test-gen` | 生成单元测试骨架 |
 | `/pr` | 创建/更新 PR |
 | `/docs` | 更新文档 |
 | `/wrap` | 端到端收尾（实现、验证、提交） |
@@ -73,16 +78,23 @@ CodeHelper 不 fork 也不修改 pi 源码，而是把 pi 当作"引擎"，用�
 | `plan-driven-dev` | 计划驱动开发全流程 |
 | `git-workflow` | 安全 Git 操作与 Conventional Commits |
 | `code-review` | 结构化代码审查清单 |
+| `debug` | 深度调试流程 |
+| `refactor` | 行为不变重构流程 |
+| `issue-analysis` | GitHub issue 分析 |
+| `ci-failure-analysis` | CI/PR 失败分析 |
+| `test-generation` | 单元测试骨架生成 |
 
 ### 增强层（回答"引擎缺什么能力"）
 
-扩展通过事件钩子介入引擎生命周期：
+扩展通过事件钩子介入引擎生命周期，或注册自定义命令/工具：
 
-- `tool_call`：在 bash 工具执行前拦截危险命令（safety-guard）
-- `turn_start` / `tool_result` / `session_before_fork`：git 快照与恢复（git-checkpoint）
-- `session_start` / `session_tree`：从会话历史重建 todo 状态（todo）
+- **安全**：`safety-guard`（拦截危险 bash 命令）、`path-guard`（受保护路径守卫）、`secret-scan`（提交前密钥扫描）
+- **感知**：`repo-status`（每轮注入 git 状态摘要 + `repo-status` 工具）
+- **记忆**：`memory`（跨会话笔记 + `memory` 工具）、`post-session-summary`（任务后自动总结）
+- **成本**：`cost-tracker`（`/cost` 命令 + `cost-stats` 工具）
+- **协作**：`git-checkpoint`（每轮代码快照，fork 可恢复）、`todo`（`todo` 工具 + `/todos` 命令）
 
-扩展还能注册自定义工具（`todo`）和自定义命令（`/todos`），并可通过 `pi.exec` 调用系统命令。
+共享代码放在 `.pi/extensions/lib/`（无 index 入口，不会被 pi 当作扩展加载）。完整清单见 README「扩展 Extensions」。
 
 ## 非交互模式说明
 
@@ -94,4 +106,3 @@ CodeHelper 不 fork 也不修改 pi 源码，而是把 pi 当作"引擎"，用�
 2. **新技能**：`.pi/skills/<name>/SKILL.md`（Agent Skills 标准）
 3. **新工具/钩子**：`.pi/extensions/<name>.ts`（默认导出工厂函数）
 4. 修改后运行 `npm run validate`，并更新 `docs/workflows.md` 与 `README.md`
-

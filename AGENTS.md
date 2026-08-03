@@ -14,7 +14,7 @@
 
 ## 校验命令
 
-- `npm run validate`（`node scripts/validate.mjs`）：校验 .pi 下的 settings、prompts、skills、extensions。
+- `npm run validate`（`node scripts/validate.mjs`）：校验 settings、prompts、skills、extensions、model-routing 与 tsc 类型。
 - 修改 prompts / skills / extensions / settings 后，必须运行 `npm run validate` 并保持全绿。
 
 ## 跨会话记忆
@@ -36,6 +36,7 @@
 - 只暂存本次会话修改的文件：`git add <path1> <path2>`；**禁止** `git add .` 或 `git add -A`。
 - 提交信息使用 Conventional Commits：`<type>[scope]: <description>`，type 取 feat / fix / docs / style / refactor / perf / test / chore。
 - **禁止**破坏性命令：`git reset --hard`、`git checkout .`、`git clean -fd`、`git stash`、force push（除非用户明确要求）。
+  - 例外：`git stash create` / `git stash apply` 由 git-checkpoint 扩展使用（非破坏性快照与恢复），属于安全操作。
 - 新分支建议命名 `feature/<slug>` 或 `fix/<slug>`（可由用户在 settings 或 prompt 中调整）。
 - 提交前运行 `npm run validate`（涉及 .pi 资源时）；涉及业务代码时运行对应项目测试。
 
