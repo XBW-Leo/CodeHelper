@@ -56,7 +56,7 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 ## 当前成果
 
 - 资源规模：14 个 prompts、8 个 skills、9 个扩展、17+ CLI 子命令
-- 引擎：pi 0.82.1（项目内 devDependencies）；provider：DeepSeek（默认 `deepseek-v4-flash`，`deepseek-v4-pro` 备用）
+- 引擎：pi 0.83.0（项目内 devDependencies）；provider：DeepSeek（默认 `deepseek-v4-flash`，`deepseek-v4-pro` 备用）
 - 代码仓库：已推送至 GitHub（XBW-Leo/CodeHelper）
 - 校验：`npm run validate` 全绿（settings / prompts / skills / extensions / model-routing / tsc）
 - 每项功能均做过真实动态验收（真实 bug、真实 issue、真实失败 PR）
@@ -244,7 +244,7 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 - [ ] CHANGELOG 与版本化（0.1.0 → 0.2.0 …）
 - [ ] 把稳定技能沉淀为可安装的 pi package（可选）
 - [ ] 汇总使用手册与 FAQ
-- [ ] 引擎升级 pi 0.82.1 → 0.83.0（升级后需回归全部扩展）
+- [x] 引擎升级 pi 0.82.1 → 0.83.0（升级后需回归全部扩展）—— ✅ 已完成（2026-08-03，validate 全绿、9/9 扩展 jiti 加载、真实 DeepSeek 冒烟通过；typebox 对齐 1.3.7）
 
 ## 后续优化项（Review 遗留）
 
