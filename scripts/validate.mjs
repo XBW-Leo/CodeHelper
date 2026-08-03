@@ -56,9 +56,10 @@ check(existsSafe(join(ROOT, "package.json")), "存在 package.json");
 
 // 2. .pi/settings.json
 const settingsPath = join(ROOT, ".pi", "settings.json");
+let settings = null;
 if (existsSafe(settingsPath)) {
 	try {
-		const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
+		settings = JSON.parse(readFileSync(settingsPath, "utf8"));
 		check(typeof settings === "object" && settings !== null, ".pi/settings.json 是合法 JSON");
 	} catch (err) {
 		check(false, `.pi/settings.json 解析失败: ${err.message}`);
@@ -67,11 +68,26 @@ if (existsSafe(settingsPath)) {
 	check(false, "存在 .pi/settings.json");
 }
 
+if (settings) {
+	if (Array.isArray(settings.enabledModels)) {
+		const badFmt = settings.enabledModels.filter(
+			(m) => typeof m !== "string" || !/^[^/]+\/[^/]+$/.test(m),
+		);
+		check(
+			badFmt.length === 0,
+			`settings: enabledModels 使用 provider/model 格式（非法项: ${badFmt.join(", ") || "无"}）`,
+		);
+	} else {
+		check(false, "settings: enabledModels 应为字符串数组");
+	}
+}
+
 // 2.1 .codehelper/model-routing.json
 const routingPath = join(ROOT, ".codehelper", "model-routing.json");
+let routing = null;
 if (existsSafe(routingPath)) {
 	try {
-		const routing = JSON.parse(readFileSync(routingPath, "utf8"));
+		routing = JSON.parse(readFileSync(routingPath, "utf8"));
 		check(typeof routing.heavy === "string" && routing.heavy, "model-routing.json: heavy 为合法模型字符串");
 		check(typeof routing.light === "string" && routing.light, "model-routing.json: light 为合法模型字符串");
 		const tiers = ["heavy", "light"];
@@ -82,6 +98,15 @@ if (existsSafe(routingPath)) {
 	}
 } else {
 	check(false, "存在 .codehelper/model-routing.json");
+}
+
+if (settings && routing) {
+	const routedModels = [routing.heavy, routing.light].filter(Boolean);
+	const missing = routedModels.filter((m) => !settings.enabledModels?.includes(m));
+	check(
+		missing.length === 0,
+		`model-routing: 路由模型均在 settings.enabledModels 中（缺失: ${missing.join(", ") || "无"}）`,
+	);
 }
 
 // 3. prompts
