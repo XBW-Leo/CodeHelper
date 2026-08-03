@@ -50,6 +50,29 @@ function existsSafe(file) {
 	}
 }
 
+/**
+ * 发现扩展入口：与 pi 扩展加载器规则一致——
+ * 顶层 *.ts/*.js 直接加载；子目录需含 index.ts/index.js（如 lib/ 这类纯模块目录会被排除）。
+ */
+function discoverExtensions(dir) {
+	const found = [];
+	if (!existsSafe(dir)) return found;
+	for (const name of readdirSync(dir)) {
+		const entry = join(dir, name);
+		if (statSync(entry).isFile() && /\.(ts|js)$/.test(name)) {
+			found.push(entry);
+		} else if (statSync(entry).isDirectory()) {
+			for (const indexName of ["index.ts", "index.js"]) {
+				if (existsSafe(join(entry, indexName))) {
+					found.push(join(entry, indexName));
+					break;
+				}
+			}
+		}
+	}
+	return found;
+}
+
 // 1. 根文件
 check(existsSafe(join(ROOT, "AGENTS.md")), "存在 AGENTS.md");
 check(existsSafe(join(ROOT, "package.json")), "存在 package.json");
@@ -149,7 +172,7 @@ if (existsSafe(skillsDir)) {
 }
 
 // 5. extensions
-const extFiles = list(join(ROOT, ".pi", "extensions"), (name) => name.endsWith(".ts"));
+const extFiles = discoverExtensions(join(ROOT, ".pi", "extensions"));
 infos.push(`  发现 ${extFiles.length} 个扩展`);
 for (const file of extFiles) {
 	const text = readFileSync(file, "utf8");
