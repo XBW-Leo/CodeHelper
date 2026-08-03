@@ -57,8 +57,8 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 
 - 资源规模：14 个 prompts、8 个 skills、9 个扩展、17+ CLI 子命令
 - 引擎：pi 0.82.1（项目内 devDependencies）；provider：DeepSeek（默认 `deepseek-v4-flash`，`deepseek-v4-pro` 备用）
-- 代码仓库：已推送至 GitHub（XBW-Leo/CodeHelper），3 次提交：`7d99992` 框架、`afb4356` P0、`4e5df11` P1（Iteration 14 待提交）
-- 校验：`npm run validate` 全绿（settings / prompts / skills / extensions / model-routing）
+- 代码仓库：已推送至 GitHub（XBW-Leo/CodeHelper）
+- 校验：`npm run validate` 全绿（settings / prompts / skills / extensions / model-routing / tsc）
 - 每项功能均做过真实动态验收（真实 bug、真实 issue、真实失败 PR）
 
 ## 阶段详情
@@ -248,10 +248,10 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 
 ## 后续优化项（Review 遗留）
 
-- [ ] 扩展 TS 类型校验：`tsc --noEmit` 加入 `npm run validate`（需引入 typescript 依赖）
-- [ ] prompt 档位标注移入 frontmatter（如 `model-tier: heavy`），减少系统提示噪音
-- [ ] notes 追加逻辑抽取公共模块，统一 memory 与 post-session-summary 的日期处理
-- [ ] 统一 settings `enabledModels` 与 model-routing 的模型 ID 书写格式（provider 前缀）
+- [x] 扩展 TS 类型校验：`tsc --noEmit` 加入 `npm run validate`（typescript 5.9.3 devDependency）—— ✅ 已完成（2026-08-03）
+- [x] prompt 档位标注移入 frontmatter（`model-tier: heavy/light`），减少系统提示噪音 —— ✅ 已完成（2026-08-03）
+- [x] notes 追加逻辑抽取公共模块（`.pi/extensions/lib/notes.ts`），统一 memory 与 post-session-summary 的日期处理（Asia/Shanghai）—— ✅ 已完成（2026-08-03）
+- [x] 统一 settings `enabledModels` 与 model-routing 的模型 ID 书写格式（provider 前缀）—— ✅ 已完成（2026-08-03）
 
 ## 完成标准（Definition of Done）
 

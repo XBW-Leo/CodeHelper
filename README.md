@@ -291,13 +291,13 @@ CodeHelper/
 | Phase 5 | 工作流验证与打磨（交互首启、端到端演练） | ⏳ 进行中 |
 | Phase 9 | 发布与沉淀（CHANGELOG、版本化、技能打包、手册） | 待开始 |
 
-待办（P2 剩余 + 质量加固）：编辑器集成（VS Code/Neovim）、联网查证、容器化/沙箱、会话分享与知识库、体验优化（alias/主题/tmux）、`tsc --noEmit` 类型校验、prompt 档位标注迁移 frontmatter、notes 逻辑统一。详见 [PLAN.md](PLAN.md)。
+待办（P2 剩余）：编辑器集成（VS Code/Neovim）、联网查证、容器化/沙箱、会话分享与知识库、体验优化（alias/主题/tmux）。质量加固四项（tsc 类型校验、prompt 档位 frontmatter、notes 公共模块、模型 ID 格式统一）已于 2026-08-03 完成。详见 [PLAN.md](PLAN.md)。
 
 ## 质量与验收
 
 每个功能的完成标准（Definition of Done）：
 
-1. `npm run validate` 全绿（settings / prompts / skills / extensions / model-routing）
+1. `npm run validate` 全绿（settings / prompts / skills / extensions / model-routing / tsc）
 2. 交互模式：`codehelper` 可直接对话并加载全部 .pi 资源
 3. 非交互模式：`codehelper <cmd> "任务"` 可执行对应工作流
 4. 扩展运行无报错，危险命令有拦截确认
