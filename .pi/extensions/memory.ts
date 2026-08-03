@@ -5,47 +5,10 @@
  * 新会话首次对话时自动加载摘要，供 agent 跨会话复用。
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
 import { StringEnum } from "@earendil-works/pi-ai";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-
-const NOTES_RELATIVE = ".codehelper/notes.md";
-const NOTES_HEADER = "# CodeHelper 项目笔记\n\n> 跨会话记忆：由 memory 工具自动维护。项目决策、踩坑经验、用户偏好都记在这里。";
-const MAX_INJECT_CHARS = 2000;
-const MAX_LIST_CHARS = 6000;
-
-function notesFile(cwd: string): string {
-	return resolve(cwd, NOTES_RELATIVE);
-}
-
-function todayHeader(): string {
-	return `## ${new Date().toISOString().slice(0, 10)}`;
-}
-
-function readNotes(file: string): string {
-	if (!existsSync(file)) return "";
-	return readFileSync(file, "utf8");
-}
-
-function appendNote(file: string, text: string): void {
-	mkdirSync(dirname(file), { recursive: true });
-	const header = todayHeader();
-	let content = existsSync(file) ? readFileSync(file, "utf8").trimEnd() : NOTES_HEADER;
-	if (!content.includes(header)) {
-		content = `${content}\n\n${header}`;
-	}
-	writeFileSync(file, `${content}\n- ${text}\n`, "utf8");
-}
-
-/** 注入摘要：只取最近一段，控制 token 开销 */
-function summary(content: string): string {
-	const trimmed = content.trimEnd();
-	const tail = trimmed.slice(-MAX_INJECT_CHARS);
-	const prefix = trimmed.length > MAX_INJECT_CHARS ? "（历史记录较长，以下为最近摘要，可用 memory 工具查看全部）\n" : "";
-	return `[memory] 项目笔记\n${prefix}${tail}`;
-}
+import { MAX_INJECT_CHARS, MAX_LIST_CHARS, appendNote, notesFile, readNotes, summary } from "./lib/notes.ts";
 
 function searchNotes(content: string, keyword: string): string {
 	const kw = keyword.toLowerCase();

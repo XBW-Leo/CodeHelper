@@ -5,13 +5,8 @@
  * 追加一条「目标 / 改动 / 结果」总结，跨会话沉淀经验。
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-
-const NOTES_RELATIVE = ".codehelper/notes.md";
-const NOTES_HEADER =
-	"# CodeHelper 项目笔记\n\n> 跨会话记忆：由 memory 工具自动维护。项目决策、踩坑经验、用户偏好都记在这里。";
+import { appendNote, notesFile, timeInTimeZone } from "./lib/notes.ts";
 
 interface SummaryMessage {
 	role: string;
@@ -55,17 +50,6 @@ function findResult(messages: SummaryMessage[]): string {
 	return "";
 }
 
-function appendSummary(cwd: string, text: string): void {
-	const file = resolve(cwd, NOTES_RELATIVE);
-	mkdirSync(dirname(file), { recursive: true });
-	const header = `## ${new Date().toISOString().slice(0, 10)}`;
-	let content = existsSync(file) ? readFileSync(file, "utf8").trimEnd() : NOTES_HEADER;
-	if (!content.includes(header)) {
-		content = `${content}\n\n${header}`;
-	}
-	writeFileSync(file, `${content}\n- ${text}\n`, "utf8");
-}
-
 export default function (pi: ExtensionAPI) {
 	// 本轮实际改动过的文件
 	let turnFiles = new Set<string>();
@@ -85,9 +69,9 @@ export default function (pi: ExtensionAPI) {
 		const files = [...turnFiles].slice(0, 5).join(", ");
 		const goal = findGoal(messages) || "（未识别目标）";
 		const result = findResult(messages) || "（无文本输出）";
-		const time = new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false });
+		const time = timeInTimeZone();
 
-		appendSummary(ctx.cwd, `[总结 ${time}] 目标：${goal}；改动：${files}；结果：${result}`);
+		appendNote(notesFile(ctx.cwd), `[总结 ${time}] 目标：${goal}；改动：${files}；结果：${result}`);
 		turnFiles = new Set<string>();
 	});
 }
