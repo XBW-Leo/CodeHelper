@@ -1,6 +1,7 @@
 {
-	"heavy": "deepseek/deepseek-v4-pro",
-	"light": "deepseek/deepseek-v4-flash",
+	"_comment": "模型名留空时，CLI 不附加 --model，使用 pi 默认模型（/login 配置）。填入示例：\"deepseek/deepseek-v4-pro\"。可用 ~/.pi/agent/model-routing.json 覆盖（优先级更高，不入库）。",
+	"heavy": "",
+	"light": "",
 	"commands": {
 		"plan": "heavy",
 		"implement": "heavy",

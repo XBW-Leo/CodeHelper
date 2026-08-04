@@ -13,6 +13,7 @@
 
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -88,12 +89,33 @@ function runInteractive() {
 }
 
 /**
+ * 读取模型路由配置：用户级（~/.pi/agent/model-routing.json）优先于项目级。
+ * 两者都缺失/非法时返回 undefined。
+ */
+function loadRouting() {
+	const candidates = [
+		join(homedir(), ".pi", "agent", "model-routing.json"),
+		ROUTING_FILE,
+	];
+	for (const file of candidates) {
+		try {
+			const routing = JSON.parse(readFileSync(file, "utf8"));
+			if (routing && typeof routing === "object") return routing;
+		} catch {
+			// 尝试下一个候选
+		}
+	}
+	return undefined;
+}
+
+/**
  * 按命令从路由配置解析模型（provider/model 格式）。
- * 命令未配置时用 light 档；配置缺失或解析失败时返回 undefined（走 pi 默认模型）。
+ * 命令未配置时用 light 档；模型为空或配置缺失时返回 undefined（走 pi 默认模型）。
  */
 function resolveRoutingModel(command) {
+	const routing = loadRouting();
+	if (!routing) return undefined;
 	try {
-		const routing = JSON.parse(readFileSync(ROUTING_FILE, "utf8"));
 		const tier = routing.commands?.[command] ?? "light";
 		const model = routing[tier];
 		return typeof model === "string" && model ? model : undefined;

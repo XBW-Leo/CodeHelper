@@ -37,19 +37,19 @@ CodeHelper 的核心决策是**分层定制**，每层回答一个问题：
 | 接入层 | `bin/codehelper.mjs`、`scripts/`、npm scripts | 怎么用起来？ |
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│ 用户入口                                                  │
+┌────────────────────────────────────────────────────────────┐
+│ 用户入口                                                   │
 │   codehelper CLI（交互 / 非交互）  npm scripts             │
-├─────────────────────────────────────────────────────────┤
-│ pi 引擎                                                   │
-│   会话管理 · 工具调用循环 · 多供应商模型接入                 │
-├─────────────────────────────────────────────────────────┤
-│ 行为层   AGENTS.md · APPEND_SYSTEM.md · settings.json     │
-│ 自动化层 prompts（14）· skills（8）                       │
-│ 增强层   extensions（9）：记忆/成本/安全/感知/总结           │
-├─────────────────────────────────────────────────────────┤
-│ 支撑     scripts/setup|validate|auto-check · model-routing│
-└─────────────────────────────────────────────────────────┘
+├────────────────────────────────────────────────────────────┤
+│ pi 引擎                                                    │
+│   会话管理 · 工具调用循环 · 多供应商模型接入               │
+├────────────────────────────────────────────────────────────┤
+│ 行为层   AGENTS.md · APPEND_SYSTEM.md · settings.json      │
+│ 自动化层 prompts（14）· skills（8）                        │
+│ 增强层   extensions（9）：记忆/成本/安全/感知/总结         │
+├────────────────────────────────────────────────────────────┤
+│ 支撑     scripts/setup|validate|auto-check · model-routing │
+└────────────────────────────────────────────────────────────┘
 ```
 
 这样设计的好处：引擎升级零成本（改依赖版本即可）、行为完全可审计（所有定制都在本仓库，diff 可见）、任何一层都可以单独替换。
@@ -107,21 +107,25 @@ chpi                 # 等价于 npm run pi
 
 如需移除：`npm run ch:alias -- --remove`。
 
-### 配置模型提供商（二选一）
+### 配置模型提供商
 
 - 在 pi 内执行 `/login`，选择订阅登录或 API key 登录
 - 或设置环境变量（取决于供应商），例如 `export DEEPSEEK_API_KEY=sk-...`
 
-本项目默认使用 DeepSeek：`deepseek-v4-flash`（轻量任务）/ `deepseek-v4-pro`（复杂任务）。API key 保存在 pi 全局凭据目录 `~/.pi/agent/auth.json`（权限 600，**不在仓库内**）。
+项目**不绑定任何供应商**：默认使用 pi 的默认模型，通过 `/login` 配置你自己的提供商。API key 保存在 pi 全局凭据目录 `~/.pi/agent/auth.json`（权限 600，**不在仓库内**）。
+
+示例（DeepSeek）：
+- 全局默认：在 `~/.pi/agent/settings.json` 配 `"defaultProvider": "deepseek"`、`"defaultModel": "deepseek-v4-flash"`
+- 多模型分档：见下方「模型与供应商配置」
 
 ## 模型与供应商配置
 
-模型路由由 [.codehelper/model-routing.json](.codehelper/model-routing.json) 驱动，格式为 `provider/model`，与具体供应商解耦：
+模型路由由 `.codehelper/model-routing.json` 驱动，与供应商解耦。**模型名留空时，CLI 不附加 `--model`，使用 pi 默认模型**；填入后按任务档位自动附加。仓库内置中性配置：
 
 ```json
 {
-  "heavy": "deepseek/deepseek-v4-pro",
-  "light": "deepseek/deepseek-v4-flash",
+  "heavy": "",
+  "light": "",
   "commands": { "plan": "heavy", "review": "light", ... }
 }
 ```
@@ -133,19 +137,21 @@ chpi                 # 等价于 npm run pi
 | `heavy` | plan、implement、debug、refactor、fix、issue、ci-fix、test-gen、wrap | 需要推理深度的复杂任务 |
 | `light` | review、commit、test、docs、pr | 轻量任务，省 token 与延迟 |
 
-切换到其他供应商（如 Anthropic / OpenAI / Google）：
+配置你自己的模型（DeepSeek / Anthropic / OpenAI / Google 均可）：
 
-1. 修改 `heavy` / `light` 为 `anthropic/claude-...`、`openai/gpt-...`、`google/gemini-...` 等（具体模型 ID 可在 pi 内用 `/model` 查看）
+1. 把 `heavy` / `light` 填为 `provider/model` 格式，例如 `deepseek/deepseek-v4-pro`、`anthropic/claude-...`、`openai/gpt-...`、`google/gemini-...`（具体模型 ID 可在 pi 内用 `/model` 查看）
 2. 配置对应 API key（环境变量或 pi 内 `/login`）
-3. 非交互命令会自动按档位附加 `--model`；交互模式用 Ctrl+P 在 `enabledModels` 之间循环切换
+3. 非交互命令会自动按档位附加 `--model`；交互模式用 Ctrl+P 在 `enabledModels`（settings.json 中配置，例如 `"enabledModels": ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"]`）之间循环切换
 
 若某个供应商暂时不可用，仅需修改这一份配置，代码与流程无需任何改动——这是「供应商无关」路由的意义。
+
+> 不想公开自己的模型偏好？可把配置放到用户级文件 `~/.pi/agent/model-routing.json`（优先级更高、不入库），仓库内保持为空即可。
 
 ### `.codehelper/` 目录策略
 
 | 文件 | 是否入库 | 说明 |
 |------|---------|------|
-| `model-routing.json` | ✅ | 模型路由配置，随版本追踪 |
+| `model-routing.json` | ✅ | 模型路由配置（模型名留空走默认；用户级文件可覆盖） |
 | `notes.md` | ✅ | 跨会话记忆（决策、踩坑、偏好） |
 | `costs.jsonl` | ❌（gitignore） | 运行时成本流水 |
 | `reports/` | ❌（gitignore） | 自动检查报告 |
@@ -197,7 +203,7 @@ npm run ch -- auto-check   # 手动跑一次，报告生成到 .codehelper/repor
     <array>
       <string>/usr/bin/env</string>
       <string>node</string>
-      <string>/Users/wuxuebin/CodeHelper/scripts/auto-check.mjs</string>
+      <string>/path/to/CodeHelper/scripts/auto-check.mjs</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict><key>Hour</key><integer>9</integer><key>Minute</key><integer>0</integer></dict>
@@ -212,8 +218,10 @@ launchctl load ~/Library/LaunchAgents/com.codehelper.auto-check.plist
 **Linux（cron）**：
 
 ```bash
-0 9 * * * cd /Users/wuxuebin/CodeHelper && /usr/bin/env node scripts/auto-check.mjs
+0 9 * * * cd /path/to/CodeHelper && /usr/bin/env node scripts/auto-check.mjs
 ```
+
+> 示例中的 `/path/to/CodeHelper` 请替换为你本机的项目路径。
 
 ## Slash 命令
 
@@ -337,10 +345,10 @@ CodeHelper/
 ## 常见问题 FAQ
 
 **Q：如何切换默认模型？**
-修改 `.pi/settings.json` 的 `defaultProvider` / `defaultModel`；复杂/简单任务的分档见 [.codehelper/model-routing.json](.codehelper/model-routing.json)。
+修改全局 `~/.pi/agent/settings.json` 或项目 `.pi/settings.json` 的 `defaultProvider` / `defaultModel`；复杂/简单任务的分档见 `.codehelper/model-routing.json`（或用户级覆盖文件）。
 
 **Q：如何接入非 DeepSeek 供应商？**
-改 `model-routing.json` 的 `heavy` / `light` 为 `provider/model` 格式，配置对应 API key 即可，代码与流程无需改动。
+把 `model-routing.json` 的 `heavy` / `light` 填为 `provider/model` 格式，配置对应 API key 即可，代码与流程无需改动。
 
 **Q：API key 存在哪里？**
 pi 全局凭据目录 `~/.pi/agent/auth.json`（权限 600），不在仓库内；`.codehelper/costs.jsonl` 与 `reports/` 也已 gitignore。
