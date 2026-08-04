@@ -1,5 +1,7 @@
 # CodeHelper
 
+![CI](https://github.com/XBW-Leo/CodeHelper/actions/workflows/ci.yml/badge.svg)
+
 > 基于 [pi](https://github.com/earendil-works/pi) 引擎的个人 AI Coding Agent —— 像 Claude Code 一样对话驱动开发，但行为完全由你自己的仓库定义。
 
 CodeHelper 不重新造一个 agent 框架，而是把 pi（`@earendil-works/pi-coding-agent`）当作引擎，用「配置即代码」的方式定制出一个专属 coding agent：把常用工程流程固化成 slash 命令、技能包与自动化扩展，并用一个轻量 CLI 统一交互模式与非交互自动化入口。
@@ -64,8 +66,9 @@ CodeHelper 的核心决策是**分层定制**，每层回答一个问题：
 - **成本透明**：按会话累计 token 与费用，`/cost` 命令与 `cost-stats` 工具实时查询
 - **多模型路由**：按任务类型自动选择 heavy/light 档模型，配置驱动、供应商无关
 - **定时监控**：`auto-check` 一键跑配置校验/测试/依赖检查，生成报告，可接入 cron / launchd
+- **自动校验**：`npm test` 冒烟（版本/语法/配置/alias）+ GitHub Actions CI 每次推送自动校验
 
-资源规模：**14 个 prompts、8 个 skills、9 个 extensions、17 个 CLI 子命令**。
+资源规模：**14 个 prompts、8 个 skills、9 个 extensions、17 个 CLI 子命令**；当前版本 **0.2.0**。
 
 ## 快速开始
 
@@ -73,6 +76,7 @@ CodeHelper 的核心决策是**分层定制**，每层回答一个问题：
 
 ```bash
 npm install          # 安装 pi 引擎与依赖
+npm test             # 冒烟测试（可选，验证环境就绪）
 npm run setup        # 环境体检（可选）
 npm run pi           # 进入交互模式
 ```
@@ -279,11 +283,16 @@ CodeHelper 在三个层面设置安全护栏，交互模式弹窗确认、非交
 CodeHelper/
 ├── AGENTS.md                 # pi 加载的项目指令（工作流约定）
 ├── PLAN.md                   # 分阶段开发计划与验收记录
+├── CHANGELOG.md              # 版本变更记录
 ├── bin/codehelper.mjs        # CLI 包装器
 ├── scripts/
 │   ├── setup.mjs             # 安装与体检
 │   ├── validate.mjs          # .pi 资源配置校验
-│   └── auto-check.mjs        # 定时自动检查（生成报告）
+│   ├── auto-check.mjs        # 定时自动检查（生成报告）
+│   ├── install-alias.mjs     # ch/chpi 快捷命令安装
+│   └── smoke-test.mjs        # npm test 冒烟测试
+├── .github/
+│   └── workflows/ci.yml      # GitHub Actions 自动校验
 ├── .codehelper/
 │   ├── model-routing.json    # 多模型路由配置（入库）
 │   ├── notes.md              # 跨会话记忆（入库）
@@ -317,7 +326,7 @@ CodeHelper/
 
 每个功能的完成标准（Definition of Done）：
 
-1. `npm run validate` 全绿（settings / prompts / skills / extensions / model-routing / tsc）
+1. `npm test` 冒烟全绿（含 `npm run validate`：settings / prompts / skills / extensions / model-routing / tsc）；GitHub Actions CI 每次推送自动校验
 2. 交互模式：`codehelper` 可直接对话并加载全部 .pi 资源
 3. 非交互模式：`codehelper <cmd> "任务"` 可执行对应工作流
 4. 扩展运行无报错，危险命令有拦截确认
