@@ -56,10 +56,11 @@ function checkDeps() {
 }
 
 function checkProvider() {
-	const keys = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY", "GROQ_API_KEY"];
+	const keys = ["DEEPSEEK_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY", "GROQ_API_KEY"];
 	const found = keys.some((key) => process.env[key]);
 	if (found) {
-		log("✔", "检测到模型提供商 API key 环境变量");
+		const detected = keys.filter((key) => process.env[key]);
+		log("✔", `检测到模型提供商 API key 环境变量（${detected.join(", ")}）`);
 	} else {
 		log("…", "未检测到 API key 环境变量；可在 pi 内执行 /login 完成登录");
 	}

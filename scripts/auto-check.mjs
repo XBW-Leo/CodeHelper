@@ -34,7 +34,14 @@ function hasScript(name) {
 }
 
 function today() {
-	return new Date().toISOString().slice(0, 10);
+	const parts = new Intl.DateTimeFormat("en-US", {
+		timeZone: "Asia/Shanghai",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	}).formatToParts(new Date());
+	const get = (type) => parts.find((p) => p.type === type)?.value ?? "";
+	return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
 const results = [];
@@ -78,10 +85,16 @@ if (hasScript("test")) {
 		results.push({ name: "依赖过期检查（npm outdated）", status: "通过", output: "所有依赖均为最新" });
 	} else if (r.code === 1 && r.stdout) {
 		hasWarning = true;
+		let outdatedCount = 0;
+		try {
+			outdatedCount = Object.keys(JSON.parse(r.stdout)).length;
+		} catch {
+			outdatedCount = r.stdout.split("\n").filter((line) => line.trim()).length;
+		}
 		results.push({
 			name: "依赖过期检查（npm outdated）",
 			status: "警告",
-			output: `存在过期依赖（共 ${r.stdout.split("\n").length} 个）:\n${r.stdout.slice(0, 1500)}`,
+			output: `存在过期依赖（共 ${outdatedCount} 个）:\n${r.stdout.slice(0, 1500)}`,
 		});
 	} else {
 		hasWarning = true;
