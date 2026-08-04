@@ -2,6 +2,20 @@
 
 CodeHelper 版本变更记录。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## [Unreleased]
+
+### Added
+
+- `npm test` smoke：版本一致性、脚本语法、validate、alias dry-run
+- GitHub Actions CI：push/PR 自动运行 `npm ci` + `npm test`
+- CLI `--help` 标注 `pr --draft`；README FAQ 补充 GitHub 推送故障排查
+
+### Fixed
+
+- auto-check：过期依赖计数改为解析 JSON（此前把 JSON 行数当包数）；报告日期统一 Asia/Shanghai
+- setup：环境体检支持检测 `DEEPSEEK_API_KEY`
+- notes：清理历史畸形条目（会话总结已单行化，后续不再产生）
+
 ## [0.2.0] - 2026-08-04
 
 ### Added

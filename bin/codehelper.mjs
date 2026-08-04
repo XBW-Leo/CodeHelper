@@ -60,7 +60,7 @@ const USAGE = `CodeHelper CLI
   issue "<编号/URL>" 分析 GitHub issue 并输出分阶段实施计划
   ci-fix "<PR>"     分析 CI/PR 检查失败：拉日志、定位根因、给修复建议
   test-gen "<目标>"  生成单元测试骨架并运行验证
-  pr "[title]"       创建/更新 Pull Request
+  pr "[title]" [--draft]  创建/更新 Pull Request（--draft 创建草稿）
   docs "[主题]"      更新项目文档
   wrap "<说明>"      端到端完成当前任务（实现、验证、提交）
 `;

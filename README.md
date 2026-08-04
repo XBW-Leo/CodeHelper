@@ -348,6 +348,9 @@ pi 全局凭据目录 `~/.pi/agent/auth.json`（权限 600），不在仓库内�
 **Q：如何查看 CodeHelper 版本？**
 `ch --version` 或 `node bin/codehelper.mjs --version`（支持 `-V`、`version`）；版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
+**Q：git 推送/拉取 GitHub 失败怎么办？**
+默认直连 GitHub；若本地 DNS 把 `github.com` 解析到不可达地址（推送长时间卡住），可临时走本机代理：`HTTPS_PROXY=http://127.0.0.1:1082 git push`（端口以你的代理软件为准）。
+
 ## 与 pi 的关系
 
 CodeHelper 不修改 pi 源码，而是以 pi 为引擎，通过项目内配置（AGENTS.md、prompts、skills、extensions、settings）定制行为。pi 的完整文档见 [pi.dev/docs](https://pi.dev/docs/latest)。
