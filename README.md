@@ -42,13 +42,13 @@ CodeHelper 的核心决策是**分层定制**，每层回答一个问题：
 │   codehelper CLI（交互 / 非交互）  npm scripts             │
 ├────────────────────────────────────────────────────────────┤
 │ pi 引擎                                                    │
-│   会话管理 · 工具调用循环 · 多供应商模型接入               │
+│   会话管理 | 工具调用循环 | 多供应商模型接入               │
 ├────────────────────────────────────────────────────────────┤
-│ 行为层   AGENTS.md · APPEND_SYSTEM.md · settings.json      │
-│ 自动化层 prompts（14）· skills（8）                        │
+│ 行为层   AGENTS.md | APPEND_SYSTEM.md | settings.json      │
+│ 自动化层 prompts（14）| skills（8）                        │
 │ 增强层   extensions（9）：记忆/成本/安全/感知/总结         │
 ├────────────────────────────────────────────────────────────┤
-│ 支撑     scripts/setup|validate|auto-check · model-routing │
+│ 支撑     scripts/setup|validate|auto-check | model-routing │
 └────────────────────────────────────────────────────────────┘
 ```
 
