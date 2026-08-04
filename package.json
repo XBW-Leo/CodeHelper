@@ -1,6 +1,6 @@
 {
 	"name": "codehelper",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"private": true,
 	"description": "Personal coding agent powered by the pi agent harness",
 	"type": "module",
@@ -30,7 +30,8 @@
 		"ch:auto-check": "node bin/codehelper.mjs auto-check",
 		"ch:pr": "node bin/codehelper.mjs pr",
 		"ch:docs": "node bin/codehelper.mjs docs",
-		"ch:wrap": "node bin/codehelper.mjs wrap"
+		"ch:wrap": "node bin/codehelper.mjs wrap",
+		"ch:alias": "node scripts/install-alias.mjs"
 	},
 	"devDependencies": {
 		"@earendil-works/pi-ai": "^0.83.0",

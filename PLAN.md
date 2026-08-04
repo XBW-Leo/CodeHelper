@@ -50,12 +50,13 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 | Phase 5 | 工作流验证与打磨 | ✅ 完成 |
 | Phase 6 | 核心功能迭代（P0，Iteration 1–5） | ✅ 完成 |
 | Phase 7 | 进阶功能迭代（P1，Iteration 6–12） | ✅ 完成 |
-| Phase 8 | 锦上添花（P2，Iteration 13–18） | ⏳ 进行中（1/6） |
-| Phase 9 | 发布与沉淀 | 待开始 |
+| Phase 8 | 锦上添花（P2，Iteration 13–18） | ✅ 完成（收敛版：I14 + I18 快捷命令；其余范围外） |
+| Phase 9 | 发布与沉淀 | ✅ 完成 |
 
 ## 当前成果
 
 - 资源规模：14 个 prompts、8 个 skills、9 个扩展、17+ CLI 子命令
+- 版本：0.2.0（CHANGELOG 已建立）
 - 引擎：pi 0.83.0（项目内 devDependencies）；provider：DeepSeek（默认 `deepseek-v4-flash`，`deepseek-v4-pro` 备用）
 - 代码仓库：已推送至 GitHub（XBW-Leo/CodeHelper）
 - 校验：`npm run validate` 全绿（settings / prompts / skills / extensions / model-routing / tsc）
@@ -230,20 +231,22 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 
 优先级逻辑：集成与体验类增强，等 P0/P1 稳定后再按需挑选。
 
-状态：⏳ 进行中（1/6）
+状态：✅ 收敛完成（2026-08-04；个人项目范围外项不计划）
 
-- [ ] Iteration 13 — **编辑器集成**：通过 pi 的 RPC/SDK 接入 VS Code 或 Neovim
+- [ ] Iteration 13 — ~~编辑器集成~~：通过 pi 的 RPC/SDK 接入 VS Code 或 Neovim —— ⛔ 范围外（CLI 交互已够用）
 - [x] Iteration 14 — **定时监控**：`auto-check` 一键跑校验/测试/依赖检查并生成报告（可接入 cron / launchd）—— ✅ 已完成（2026-08-02 验收通过）
-- [ ] Iteration 15 — **联网查证**：web search / 官方文档查证 skill
-- [ ] Iteration 16 — **容器化 / 沙箱**：参考 pi containerization.md 在受限环境运行
-- [ ] Iteration 17 — **会话分享与知识沉淀**：优质会话导出 HTML/笔记，形成个人知识库
-- [ ] Iteration 18 — **体验优化**：shell alias、自定义主题、tmux 集成
+- [ ] Iteration 15 — ~~联网查证~~：web search / 官方文档查证 skill —— ⛔ 范围外（网络环境不稳定，待需要时再评估）
+- [ ] Iteration 16 — ~~容器化 / 沙箱~~：参考 pi containerization.md 在受限环境运行 —— ⛔ 范围外（本地个人项目用不上）
+- [ ] Iteration 17 — ~~会话分享与知识沉淀~~：优质会话导出 HTML/笔记，形成个人知识库 —— ⛔ 范围外（memory/notes 已满足）
+- [x] Iteration 18 — **体验优化**：仅实现 shell 快捷命令（`npm run ch:alias`，`ch` / `chpi`）—— ✅ 已完成（2026-08-04 实测通过）；主题、tmux 范围外
 
 ### Phase 9 — 发布与沉淀
 
-- [ ] CHANGELOG 与版本化（0.1.0 → 0.2.0 …）
-- [ ] 把稳定技能沉淀为可安装的 pi package（可选）
-- [ ] 汇总使用手册与 FAQ
+状态：✅ 完成（2026-08-04，收敛版）
+
+- [x] CHANGELOG 与版本化（0.1.0 → 0.2.0）—— ✅ 已完成（2026-08-04）
+- [ ] 把稳定技能沉淀为可安装的 pi package（可选）—— ⛔ 范围外（个人项目不计划）
+- [x] 汇总使用手册与 FAQ（README 即手册，FAQ 已补齐）—— ✅ 已完成（2026-08-04）
 - [x] 引擎升级 pi 0.82.1 → 0.83.0（升级后需回归全部扩展）—— ✅ 已完成（2026-08-03，validate 全绿、9/9 扩展 jiti 加载、真实 DeepSeek 冒烟通过；typebox 对齐 1.3.7）
 
 ## 后续优化项（Review 遗留）
@@ -256,7 +259,7 @@ pi coding agent（引擎：会话管理、工具调用、模型接入）
 ## 遗留事项（待办评估）
 
 - [ ] **typescript 5.9.3 → 7.x 升级评估**：TS 7 为原生（Go）重写，跨 major 对 tsc/tsconfig 行为有差异风险；auto-check 会持续报 outdated（警告级，不影响流程）。决定：**暂缓**，待 Phase 8 收尾后、Phase 9 发布前单独评估（2026-08-03 端到端演练中发现并记录）。
-- [ ] **/pr 交互体验**：已支持 `--draft` 参数（2026-08-03 修复），后续可考虑交互模式选择是否 Draft。
+- [ ] **/pr 交互体验**：已支持 `--draft` 参数（2026-08-03 修复）；交互模式选择 Draft —— ⛔ 范围外（不计划）
 
 ## 完成标准（Definition of Done）
 

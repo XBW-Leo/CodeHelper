@@ -85,6 +85,24 @@ npx pi
 
 首次交互运行会询问是否信任本项目；确认后才会加载 `.pi/` 下的 prompts、skills 和 extensions。
 
+### 终端快捷方式（可选）
+
+安装两个 alias 方便日常使用：`ch`（跑非交互命令）、`chpi`（进入交互模式）：
+
+```bash
+npm run ch:alias            # 先预览将写入 ~/.zshrc 的内容（dry-run）
+npm run ch:alias -- --apply # 确认后写入
+```
+
+新开终端生效后即可：
+
+```bash
+ch plan "你的任务"   # 等价于 npm run ch -- plan "..."
+chpi                 # 等价于 npm run pi
+```
+
+如需移除：`npm run ch:alias -- --remove`。
+
 ### 配置模型提供商（二选一）
 
 - 在 pi 内执行 `/login`，选择订阅登录或 API key 登录
@@ -289,11 +307,11 @@ CodeHelper/
 | Phase 0–4 | 调研、骨架、核心配置、命令与技能、扩展 | ✅ 完成 |
 | Phase 6 | 核心功能迭代（P0：调试/重构/安全/状态感知，5/5） | ✅ 完成 |
 | Phase 7 | 进阶功能迭代（P1：记忆/成本/路由/issue/CI/测试生成，7/7） | ✅ 完成 |
-| Phase 8 | 锦上添花（P2：定时监控已完成，1/6） | ⏳ 进行中 |
+| Phase 8 | 锦上添花（P2 收敛：定时监控 + 快捷命令；其余范围外） | ✅ 完成（收敛版） |
 | Phase 5 | 工作流验证与打磨（交互首启、端到端演练） | ✅ 完成 |
-| Phase 9 | 发布与沉淀（CHANGELOG、版本化、技能打包、手册） | 待开始 |
+| Phase 9 | 发布与沉淀（CHANGELOG、版本化；技能打包范围外） | ✅ 完成 |
 
-待办（P2 剩余）：编辑器集成（VS Code/Neovim）、联网查证、容器化/沙箱、会话分享与知识库、体验优化（alias/主题/tmux）。质量加固四项（tsc 类型校验、prompt 档位 frontmatter、notes 公共模块、模型 ID 格式统一）已于 2026-08-03 完成。详见 [PLAN.md](PLAN.md)。
+收敛说明：编辑器集成、联网查证、容器化/沙箱、会话分享、主题/tmux、技能打包已标记为「个人项目范围外（不计划）」，详见 [PLAN.md](PLAN.md)。
 
 ## 质量与验收
 
@@ -324,6 +342,12 @@ pi 全局凭据目录 `~/.pi/agent/auth.json`（权限 600），不在仓库内�
 **Q：如何查看本次会话花费？**
 交互模式输入 `/cost`；agent 可用 `cost-stats` 工具；历史流水在 `.codehelper/costs.jsonl`。
 
+**Q：如何安装 `ch` / `chpi` 快捷命令？**
+`npm run ch:alias` 预览、`npm run ch:alias -- --apply` 写入 `~/.zshrc`，新开终端生效；`--remove` 可移除。
+
+**Q：如何查看 CodeHelper 版本？**
+`ch --version` 或 `node bin/codehelper.mjs --version`（支持 `-V`、`version`）；版本变更见 [CHANGELOG.md](CHANGELOG.md)。
+
 ## 与 pi 的关系
 
 CodeHelper 不修改 pi 源码，而是以 pi 为引擎，通过项目内配置（AGENTS.md、prompts、skills、extensions、settings）定制行为。pi 的完整文档见 [pi.dev/docs](https://pi.dev/docs/latest)。
@@ -331,6 +355,7 @@ CodeHelper 不修改 pi 源码，而是以 pi 为引擎，通过项目内配置�
 ## 文档
 
 - [PLAN.md](PLAN.md)：分阶段开发计划与验收记录
+- [CHANGELOG.md](CHANGELOG.md)：版本变更记录
 - [docs/architecture.md](docs/architecture.md)：架构说明
 - [docs/workflows.md](docs/workflows.md)：自动化工作流说明
 
