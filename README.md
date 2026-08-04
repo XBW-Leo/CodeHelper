@@ -36,20 +36,19 @@ CodeHelper 的核心决策是**分层定制**，每层回答一个问题：
 | 增强层 | `.pi/extensions/*.ts`（事件钩子 + 自定义工具） | 引擎缺什么能力？ |
 | 接入层 | `bin/codehelper.mjs`、`scripts/`、npm scripts | 怎么用起来？ |
 
-```
-┌────────────────────────────────────────────────────────────┐
-│ 用户入口                                                   │
-│   codehelper CLI（交互 / 非交互）  npm scripts             │
-├────────────────────────────────────────────────────────────┤
-│ pi 引擎                                                    │
-│   会话管理 | 工具调用循环 | 多供应商模型接入               │
-├────────────────────────────────────────────────────────────┤
-│ 行为层   AGENTS.md | APPEND_SYSTEM.md | settings.json      │
-│ 自动化层 prompts（14）| skills（8）                        │
-│ 增强层   extensions（9）：记忆/成本/安全/感知/总结         │
-├────────────────────────────────────────────────────────────┤
-│ 支撑     scripts/setup|validate|auto-check | model-routing │
-└────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    User["用户入口：codehelper CLI（交互 / 非交互）· npm scripts"]
+    Engine["pi 引擎：会话管理 · 工具调用循环 · 多供应商模型接入"]
+    Behavior["行为层：AGENTS.md · APPEND_SYSTEM.md · settings.json"]
+    Auto["自动化层：prompts（14）· skills（8）"]
+    Ext["增强层：extensions（9）记忆/成本/安全/感知/总结"]
+    Support["支撑：scripts setup/validate/auto-check · model-routing"]
+    User --> Engine
+    Engine --> Behavior
+    Engine --> Auto
+    Engine --> Ext
+    Engine --> Support
 ```
 
 这样设计的好处：引擎升级零成本（改依赖版本即可）、行为完全可审计（所有定制都在本仓库，diff 可见）、任何一层都可以单独替换。
